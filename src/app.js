@@ -30,6 +30,7 @@ db.once('open', () => {
 // Rutas
 const evaluationRouter = require('./routes/evaluation');
 app.use('/evaluation', evaluationRouter);
+app.use('/evaluation/independence', evaluationRouter)
 
 // Inicia el servidor
 app.listen(port, () => {
