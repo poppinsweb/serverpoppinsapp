@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Evaluation = require('../models/Evaluations');
+const Evaluation = require('../Evaluations');
 
 // GET /evaluation - Get all evaluations
 router.get('/', async (req, res) => {

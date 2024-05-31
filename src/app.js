@@ -18,8 +18,7 @@ const dbUri = process.env.DB_URI;
 
 // Conectar a MongoDB Atlas
 mongoose.connect(dbUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+   
 });
 
 const db = mongoose.connection;
