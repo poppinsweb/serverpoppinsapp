@@ -6,4 +6,3 @@ const { getSkillsGrooming } = require('../controllers/skillsGrooming.controller'
 router.get('/skillsgrooming', getSkillsGrooming);
 
 module.exports = router;
-
