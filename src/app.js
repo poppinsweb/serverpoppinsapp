@@ -13,8 +13,11 @@ app.use(cors());
 
 // Rutas
 const evaluationRouter = require('./routes/evaluation.routes.js');
+const independenceRouter = require('./routes/independence.routes.js');
+const skillsGroomingRouter = require('./routes/skillsGrooming.routes.js');
 app.use('/evaluations', evaluationRouter);
-
+app.use('/evaluations', independenceRouter);
+app.use('/evaluations', skillsGroomingRouter);
 
 // *******************************************************************
 // URL de conexión a MongoDB Atlas desde variables de entorno

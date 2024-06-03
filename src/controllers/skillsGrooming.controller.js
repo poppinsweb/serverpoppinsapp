@@ -1,10 +1,10 @@
 const Evaluations = require("../models/Evaluations");
 
-const getIndependence = async (req, res) => {
+const getSkillsGrooming = async (req, res) => {
     try {
-      const independence = await Evaluations.aggregate([
+      const skillsGrooming = await Evaluations.aggregate([
         { $unwind: '$questions' },
-        { $match: { 'questions.id': { $in: [1, 2, 3, 4] } } },
+        { $match: { 'questions.id': { $in: [5, 6, 7, 8, 9, 10, 11, 12, 13] } } },
         { $group: {
           _id: '$_id',
           title: { $first: '$title' },
@@ -14,11 +14,11 @@ const getIndependence = async (req, res) => {
           questions: { $push: '$questions' }
         }}
       ])
-      res.json(independence);
-      console.log(independence);
+      res.json(skillsGrooming);
+      console.log(skillsGrooming);
     } catch (error) {
       res.status(500).json({ message: err.message });
     }
   };
 
-  module.exports = { getIndependence };
+  module.exports = { getSkillsGrooming };
