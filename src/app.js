@@ -22,15 +22,19 @@ const habitsSleepingRouter = require('./routes/habitsSleeping.routes.js');
 const responsabilitiesRouter = require('./routes/responsabilities.routes.js');
 const aditionalsRouter = require('./routes/aditionals.routes.js');
 
-app.use('/evaluations', evaluationRouter);
-app.use('/evaluations', independenceRouter);
-app.use('/evaluations', skillsGroomingRouter);
-app.use('/evaluations', skillsDressingRouter);
-app.use('/evaluations', skillsFeedingRouter);
-app.use('/evaluations', habitsFeedingRouter);
-app.use('/evaluations', habitsSleepingRouter);
-app.use('/evaluations', responsabilitiesRouter);
-app.use('/evaluations', aditionalsRouter);
+const usersRouter  = require('./routes/users.routes.js');
+
+app.use('/api', evaluationRouter);
+app.use('/api', independenceRouter);
+app.use('/api', skillsGroomingRouter);
+app.use('/api', skillsDressingRouter);
+app.use('/api', skillsFeedingRouter);
+app.use('/api', habitsFeedingRouter);
+app.use('/api', habitsSleepingRouter);
+app.use('/api', responsabilitiesRouter);
+app.use('/api', aditionalsRouter);
+
+app.use('/api', usersRouter);
 
 // *******************************************************************
 // URL de conexión a MongoDB Atlas desde variables de entorno
