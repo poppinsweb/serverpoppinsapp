@@ -23,6 +23,7 @@ const responsabilitiesRouter = require('./routes/responsabilities.routes.js');
 const aditionalsRouter = require('./routes/aditionals.routes.js');
 
 const usersRouter  = require('./routes/users.routes.js');
+const childrenRouter = require('./routes/children.routes.js');
 
 app.use('/api', evaluationRouter);
 app.use('/api', independenceRouter);
@@ -35,6 +36,7 @@ app.use('/api', responsabilitiesRouter);
 app.use('/api', aditionalsRouter);
 
 app.use('/api', usersRouter);
+app.use('/api', childrenRouter);
 
 // *******************************************************************
 // URL de conexión a MongoDB Atlas desde variables de entorno
