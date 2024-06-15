@@ -6,7 +6,7 @@
   },
   "categories": [
     {
-      "category": "gender",
+      "category": "Sexo",
       "options": [
         {
           "label": "Femenino",
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "category": "socialLevel",
+      "category": "Estrato",
       "options": [
         {
           "label": "1",
@@ -66,7 +66,7 @@
       ]
     },
     {
-      "category": "educationType",
+      "category": "Tipo de Institución Educativa",
       "options": [
         {
           "label": "Público",
@@ -91,7 +91,7 @@
       ]
     },
     {
-      "category": "degree",
+      "category": "Nivel Escolar",
       "options": [
         {
           "label": "Maternal",
@@ -121,7 +121,7 @@
       ]
     },
     {
-      "category": "yearsOld",
+      "category": "Años de edad",
       "options": [
         {
           "label": "1",
@@ -154,7 +154,7 @@
       ]
     },
     {
-      "category": "monthsOld",
+      "category": "Meses",
       "options": [
         {
           "label": "1",

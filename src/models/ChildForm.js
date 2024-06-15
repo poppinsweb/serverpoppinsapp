@@ -12,11 +12,13 @@ const CategorySchema = new Schema({
   options: [OptionSchema]
 });
 
-const ChildrenSchema = new Schema({
+const ChildFormSchema = new Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   categories: { type: [CategorySchema], required: true }
-}, { collection: 'childrenData'});
+}, { collection: 'childrenform'});
 
-const ChildrenData = mongoose.model('childrendData', ChildrenSchema);
+const ChildForm = mongoose.model('ChildForm', ChildFormSchema);
 
-module.exports = ChildrenData;
+module.exports = ChildForm;

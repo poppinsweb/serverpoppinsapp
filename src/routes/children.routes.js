@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { getChildrenData } = require('../controllers/children.controller');
+const { getChildrenForm } = require('../controllers/children.controller');
 
-router.get('/children', getChildrenData);
+router.get('/children', getChildrenForm);
 
 module.exports = router;

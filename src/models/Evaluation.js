@@ -27,7 +27,7 @@ const EvaluationSchema = new Schema({
   questions: { type: [QuestionSchema], required: true }
 }, { collection: 'evaluations' }); // Especificar el nombre de la colección
 
-const Evaluations = mongoose.model('Evaluation', EvaluationSchema);
+const Evaluation = mongoose.model('evaluations', EvaluationSchema);
 
-module.exports = Evaluations;
+module.exports = Evaluation;
 

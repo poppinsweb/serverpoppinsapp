@@ -1,14 +1,14 @@
-const ChildrenData = require("../models/ChildrenData");
+const ChildForm = require("../models/ChildForm");
 
-const getChildrenData = async (req, res) => {
+const getChildrenForm = async (req, res) => {
   try {
-    const childrenData = await ChildrenData.find();
-    console.log("Fetched data:", childrenData);
-    if (!childrenData) {
+    const childrenForm = await ChildForm.find();
+    console.log("Fetched data:", childrenForm);
+    if (!childrenForm) {
       return res.status(404).json({ message: "no data found" });
     }
-    res.json(childrenData);
-    console.log("Children data retrieved:", childrenData);
+    res.json(childrenForm);
+    console.log("Children data retrieved:", childrenForm);
   } catch (error) {
     res.status(500).json({ message: "Error fetching children data", error });
   }
@@ -16,4 +16,4 @@ const getChildrenData = async (req, res) => {
 
 
 
-module.exports = { getChildrenData };
+module.exports = { getChildrenForm };

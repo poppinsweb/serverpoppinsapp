@@ -25,7 +25,7 @@ const aditionalsRouter = require('./routes/aditionals.routes.js');
 const usersRouter  = require('./routes/users.routes.js');
 const childrenRouter = require('./routes/children.routes.js');
 
-const childrenDataResponseRouter = require('./routes/childrenDataResponse.routes.js');
+const childrenResponseRouter = require('./routes/childrenResponse.routes.js');
 
 app.use('/api', evaluationRouter);
 app.use('/api', independenceRouter);
@@ -40,7 +40,7 @@ app.use('/api', aditionalsRouter);
 app.use('/api', usersRouter);
 app.use('/api', childrenRouter);
 
-app.use('/api', childrenDataResponseRouter);
+app.use('/api', childrenResponseRouter);
 
 // *******************************************************************
 // URL de conexión a MongoDB Atlas desde variables de entorno

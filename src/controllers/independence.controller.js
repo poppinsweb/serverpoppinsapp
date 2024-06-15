@@ -1,4 +1,4 @@
-const Evaluations = require("../models/Evaluations");
+const Evaluations = require("../models/Evaluation");
 
 const getIndependence = async (req, res) => {
     try {

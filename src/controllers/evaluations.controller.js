@@ -1,4 +1,4 @@
-const Evaluations = require("../models/Evaluations");
+const Evaluations = require("../models/Evaluation");
 
 // Obtiene la encuesta completa desde la db
 const getEvaluations = async (req, res) => {
