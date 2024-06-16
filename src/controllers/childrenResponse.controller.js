@@ -16,4 +16,14 @@ const saveChildResponse = async (req, res) => {
   }
 };
 
-module.exports = { saveChildResponse };
+const getChildrenResponse = async (req, res) => {
+  try {
+    const children = await ChildResponse.find();
+    res.json(children)
+    console.log('Children data retrieved:', children);
+  } catch (error) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { saveChildResponse, getChildrenResponse };
