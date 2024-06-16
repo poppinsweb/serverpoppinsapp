@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const { saveChildResponse } = require('../controllers/childrenResponse.controller');
+// const express = require('express');
+// const router = express.Router();
+// const { saveChildResponse } = require('../controllers/childrenResponse.controller');
 
-router.post('/childrenres', saveChildResponse);
+// router.post('/childrenres', saveChildResponse);
 
-module.exports = router;
+// module.exports = router;
