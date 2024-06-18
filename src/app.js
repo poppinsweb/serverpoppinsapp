@@ -1,5 +1,8 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 const mongoose = require('mongoose');
+const MongoStore= require('connect-mongo');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
@@ -10,6 +13,16 @@ const port = 3000;
 // Middlewares
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
+app.use(session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({mongoUrl: process.env.DB_URI}),
+    cookie: { 
+        maxAge: 1000 * 60 * 60 *24 *7 // 1 semana
+     } //Se cambia al usar https
+}));
 
 // Rutas
 const evaluationRouter = require('./routes/evaluation.routes.js');
