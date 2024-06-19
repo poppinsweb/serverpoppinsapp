@@ -10,18 +10,23 @@ dotenv.config();
 const app = express();
 const port = 3000;
 
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
+
 // Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(session({
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({mongoUrl: process.env.DB_URI}),
+    store: MongoStore.create({ mongoUrl: process.env.DB_URI }),
     cookie: { 
         maxAge: 1000 * 60 * 60 *24 *7 // 1 semana
-     } //Se cambia al usar https
+     } 
 }));
 
 // Rutas

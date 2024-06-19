@@ -2,18 +2,28 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const SelectedOptionSchema = new Schema({
-  category: { type: String, required: true },
-  value: { type: Schema.Types.Mixed, required: true }
-});
+// const SelectedOptionSchema = new Schema({
+//   category: { type: String, required: true },
+//   value: { type: Schema.Types.Mixed, required: true }
+// });
 
-const ChildResponseSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  responses: [SelectedOptionSchema]
-}, { collection: 'childrenresponses' });
+const ChildResponseSchema = new Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    evaluationtoken: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+    responses: [
+      {
+        category: { type: String, required: true },
+        value: { type: Schema.Types.Mixed, required: true },
+      },
+    ],
+    // responses: [SelectedOptionSchema]
+  },
+  { collection: "childrenresponses" }
+);
 
-const ChildResponse = mongoose.model('ChildResponse', ChildResponseSchema);
+const ChildResponse = mongoose.model("ChildResponse", ChildResponseSchema);
 
 module.exports = ChildResponse;

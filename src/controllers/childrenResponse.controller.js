@@ -2,16 +2,28 @@ const ChildResponse = require("../models/ChildResponse");
 
 const saveChildResponse = async (req, res) => {
   try {
-    const { firstName, lastName, responses } = req.body;
+    const { firstName, lastName, evaluationtoken, responses } = req.body;
+    // const evaluationtoken = req.session.user.evaluationtoken;
+
+    if (!firstName || !lastName  || !responses) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    if (!evaluationtoken) {
+      return res.status(400).json({ message: "Evaluation token is required" });
+    }
+
     const newResponse = new ChildResponse({
       firstName,
       lastName,
+      evaluationtoken,
       responses: Object.entries(responses).map(([category, value]) => ({ category, value }))
     });
 
     await newResponse.save();
     res.status(201).json({ message: "Response saved successfully" });
   } catch (error) {
+    console.error("Error saving child response:", error)
     res.status(500).json({ message: "Error saving response", error });
   }
 };
@@ -22,6 +34,7 @@ const getChildrenResponse = async (req, res) => {
     res.json(children)
     console.log('Children data retrieved:', children);
   } catch (error) {
+    console.error("Error retrieving children data:", error);
     res.status(500).json({ message: err.message });
   }
 }

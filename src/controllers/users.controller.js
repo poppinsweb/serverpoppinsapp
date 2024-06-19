@@ -1,5 +1,4 @@
 // REQUIERE IMPLEMENTAR JWT
-
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
@@ -62,10 +61,19 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ message: 'Not authenticated' });
-  }
-  res.json({ user: req.session.user});
-}
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Error logging out" });
+    }
+    res.json({ message: "Logout successful" });
+  });
+};
 
-module.exports = { getAllUsers, createUser, loginUser, logoutUser};
+const verifyUser = (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+  res.json({ user: req.session.user });
+};
+
+module.exports = { getAllUsers, createUser, loginUser, logoutUser, verifyUser };
