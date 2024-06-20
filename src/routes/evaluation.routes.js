@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { saveEvaluationResponses } = require('../controllers/evaluationResponses.controller');
+const { saveEvaluationResponses, getEvaluationResponses } = require('../controllers/evaluationResponses.controller');
 
 router.post('/responses', saveEvaluationResponses);
+router.get('/responses', getEvaluationResponses);
 
 module.exports = router;

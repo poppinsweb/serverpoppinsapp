@@ -3,7 +3,6 @@ const ChildResponse = require("../models/ChildResponse");
 const saveChildResponse = async (req, res) => {
   try {
     const { firstName, lastName, evaluationtoken, responses } = req.body;
-    // const evaluationtoken = req.session.user.evaluationtoken;
 
     if (!firstName || !lastName  || !responses) {
       return res.status(400).json({ message: "Missing required fields" });

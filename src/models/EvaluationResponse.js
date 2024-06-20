@@ -11,6 +11,7 @@ const EvaluationResponsesSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     evaluationId: { type: Schema.Types.ObjectId, required: true, ref: 'Evaluation' },
     responses: { type: [ResponseSchema], required: true },
+    evaluationtoken: { type: String, required: true },
     createdAt: { type: Date, default: Date.now},
     updatedAt: { type: Date, default: Date.now}
 }, { collection: 'evaluationresponses'});
