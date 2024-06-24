@@ -33,8 +33,8 @@ app.use(session({
 const evaluationRouter = require('./routes/evaluation.routes.js');
 app.use('/api', evaluationRouter);
 
-const categoriesRouter = require('./routes/categories.routes.js');
-app.use('/api', categoriesRouter);
+const evaluationResponses = require('./routes/evaluationResponses.routes.js');
+app.use('/api', evaluationResponses);
 
 const usersRouter  = require('./routes/users.routes.js');
 app.use('/api', usersRouter);
