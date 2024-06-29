@@ -3,6 +3,6 @@ const router = express.Router();
 const { saveEvaluationResponses, getEvaluationResponses } = require('../controllers/evaluationResponses.controller');
 
 router.post('/responses', saveEvaluationResponses);
-router.get('/evalresponses', getEvaluationResponses);
+router.get('/evaluationresponses', getEvaluationResponses);
 
 module.exports = router;
