@@ -2,11 +2,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-// const SelectedOptionSchema = new Schema({
-//   category: { type: String, required: true },
-//   value: { type: Schema.Types.Mixed, required: true }
-// });
-
 const ChildResponseSchema = new Schema(
   {
     firstName: { type: String, required: true },
@@ -19,7 +14,6 @@ const ChildResponseSchema = new Schema(
         value: { type: Schema.Types.Mixed, required: true },
       },
     ],
-    // responses: [SelectedOptionSchema]
   },
   { collection: "childrenresponses" }
 );
