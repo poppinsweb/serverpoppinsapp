@@ -1,16 +1,6 @@
 const EvaluationResponses = require("../models/EvaluationResponse");
 const mongoose = require("mongoose");
 
-// const categories = {
-//   skillsGrooming: { start: 5, end: 13 },
-//   skillsDressing: { start: 14, end: 18 },
-//   skillsFeeding: { start: 19, end: 21 },
-//   habitsFeeding: { start: 22, end: 36 },
-//   habitsSleeping: { start: 37, end: 40 },
-//   responsabilities: { start: 41, end: 48 },
-//   aditional: { start: 49, end: 51 },
-// };
-
 const saveEvaluationResponses = async (req, res) => {
   const { userId, evaluationId, responses, evaluationtoken } = req.body;
 

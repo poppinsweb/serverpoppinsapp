@@ -42,8 +42,11 @@ app.use('/api', usersRouter);
 const childrenRouter = require('./routes/children.routes.js');
 app.use('/api', childrenRouter);
 
-const completeEvaluation = require('./routes/completeEvaluation.routes.js');
-app.use('/api', completeEvaluation);
+const completeEvaluationRouter = require('./routes/completeEvaluation.routes.js');
+app.use('/api', completeEvaluationRouter);
+
+const evaluationTokenRouter = require('./routes/evaluationTokens.routes.js');
+app.use('/api', evaluationTokenRouter);
 
 // *******************************************************************
 // URL de conexión a MongoDB Atlas desde variables de entorno
