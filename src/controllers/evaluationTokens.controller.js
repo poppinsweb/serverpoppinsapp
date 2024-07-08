@@ -1,10 +1,8 @@
-// controllers/evaluationTokenController.js
-const evaluationTokenService = require('../services/useEvaluationToken');
+const evaluationTokenService = require("../services/useEvaluationToken");
 
 const createTokenController = async (req, res) => {
-  const { email, userId } = req.body;
-
   try {
+    const { email, userId } = req.body;
     const token = await evaluationTokenService.createEvaluationToken(email, userId);
     res.status(201).send({ token });
   } catch (error) {
@@ -49,4 +47,3 @@ module.exports = {
   getAllTokensController,
   deleteTokenController,
 };
-

@@ -1,17 +1,15 @@
-// routes/evaluationTokenRoutes.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const evaluationTokenController = require('../controllers/evaluationTokens.controller'); 
+const {
+  createTokenController,
+  useTokenController,
+  getAllTokensController,
+  deleteTokenController,
+} = require("../controllers/evaluationTokens.controller");
 
-// Ruta para crear un token
-router.post('/create-token', evaluationTokenController.createTokenController);
-
-// Ruta para usar el token
-router.post('/use-token', evaluationTokenController.useTokenController);
-
-// Ruta para obtener todos los tokens (opcional)
-router.get('/tokens', evaluationTokenController.getAllTokensController);
-
-router.delete('/delete-token/:id', evaluationTokenController.deleteTokenController);
+router.post("/create-token", createTokenController);
+router.post("/use-token", useTokenController);
+router.get("/tokens", getAllTokensController);
+router.delete("/delete-token/:id", deleteTokenController);
 
 module.exports = router;
