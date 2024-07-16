@@ -36,6 +36,21 @@ const getChildrenResponse = async (req, res) => {
     console.error("Error retrieving children data:", error);
     res.status(500).json({ message: err.message });
   }
-}
+};
 
-module.exports = { saveChildResponse, getChildrenResponse };
+const deleteChild = async (req, res) => {
+  try {
+    const delChildren = await ChildResponse.findOneAndDelete(req.params.id);
+
+    if(!delChildren) {
+      return res
+      .status(404)
+      .json({ message: "Child no encontrado "});
+    }
+    res.status(200).json({ message: "Child Eliminado" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { saveChildResponse, getChildrenResponse, deleteChild };

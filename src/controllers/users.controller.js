@@ -28,6 +28,19 @@ const createUser = async (req, res) => {
   }
 };
 
+const deleteUser = async(req, res) => {
+  try {
+    const delUserId = await User.findOneAndDelete(req.params.id)
+    if(!delUserId) {
+      return res
+      .status(404)
+      .json( { message: "No se pudo eliminar usuario" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -76,4 +89,4 @@ const verifyUser = (req, res) => {
   res.json({ user: req.session.user });
 };
 
-module.exports = { getAllUsers, createUser, loginUser, logoutUser, verifyUser };
+module.exports = { getAllUsers, createUser, deleteUser, loginUser, logoutUser, verifyUser };
