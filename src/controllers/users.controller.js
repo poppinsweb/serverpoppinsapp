@@ -13,12 +13,12 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { email, password, evaluationtoken, admin } = req.body;
+    const { email, password, admin } = req.body;
     const hashedPassword = await bcrypt.hash(password, 6);
     const newUser = new User({
       email,
       password: hashedPassword,
-      evaluationtoken,
+      // evaluationtoken,
       admin,
     });
     await newUser.save();
@@ -59,7 +59,7 @@ const loginUser = async (req, res) => {
     req.session.user = {
       id: user._id,
       email: user.email,
-      evaluationtoken: user.evaluationtoken,
+      // evaluationtoken: user.evaluationtoken,
       admin: user.admin,
     };
 
