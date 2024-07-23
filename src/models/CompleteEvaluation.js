@@ -13,7 +13,6 @@ const ResponseSchema = new Schema({
 const CompleteEvaluationSchema = new Schema(
   {
     evaluationtoken: { type: String, required: true },
-    // childResponseId: { type: Schema.Types.ObjectId, ref: 'ChildResponse', required: true },
     evaluationId: {
       type: Schema.Types.ObjectId,
       ref: "Evaluation",

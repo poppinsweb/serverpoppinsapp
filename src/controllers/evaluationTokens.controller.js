@@ -1,6 +1,7 @@
+// const EvaluationToken = require("../models/EvaluationToken");
 const evaluationTokenService = require("../services/useEvaluationToken");
 
-const createTokenController = async (req, res) => {
+const createToken = async (req, res) => {
   try {
     const { email, userId } = req.body;
     const token = await evaluationTokenService.createEvaluationToken(email, userId);
@@ -10,8 +11,8 @@ const createTokenController = async (req, res) => {
   }
 };
 
-const useTokenController = async (req, res) => {
-  const { token } = req.body;
+const useToken = async (req, res) => {
+  const { token } = req.params;
 
   try {
     const message = await evaluationTokenService.useEvaluationToken(token);
@@ -21,7 +22,7 @@ const useTokenController = async (req, res) => {
   }
 };
 
-const getAllTokensController = async (req, res) => {
+const getAllTokens = async (req, res) => {
   try {
     const tokens = await evaluationTokenService.getAllEvaluationTokens();
     res.status(200).send({ tokens });
@@ -30,7 +31,7 @@ const getAllTokensController = async (req, res) => {
   }
 };
 
-const deleteTokenController = async (req, res) => {
+const deleteToken = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -41,9 +42,19 @@ const deleteTokenController = async (req, res) => {
   }
 };
 
+// const secondEvaluationToken = async (req, res) => {
+//   const { token } = req.params;
+//   try {
+    
+//   } catch (error) {
+//     res.status(400).send({ error: error.message });
+//   }
+// };
+
 module.exports = {
-  createTokenController,
-  useTokenController,
-  getAllTokensController,
-  deleteTokenController,
+  createToken,
+  useToken,
+  getAllTokens,
+  deleteToken,
+  // secondEvaluationToken,
 };
