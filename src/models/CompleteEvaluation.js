@@ -19,6 +19,7 @@ const CompleteEvaluationSchema = new Schema(
       required: true,
     },
     responses: { type: [ResponseSchema], required: true },
+    responses2: { type: [ResponseSchema] }, // Nuevo campo para las segundas respuestas
     createdAt: { type: Date, default: Date.now },
   },
   { collection: "completevaluations" }

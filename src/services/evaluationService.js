@@ -7,75 +7,37 @@ const saveCompleteEvaluation = async (evaluationtoken, evaluationId, responses) 
 
     if (!evaluationToken) {
       throw new Error('Token not found');
-    }
+    };
 
     if (evaluationToken.usageCount >= 2) {
       throw new Error('Token has been used the maximum number of times allowed');
-    }
+    };
 
-    const completeEvaluation = new CompleteEvaluation({
+    const completeEvaluation = await CompleteEvaluation.findOne({ evaluationtoken, evaluationId });
+
+    if (!completeEvaluation) {
+     const newEvaluation = new CompleteEvaluation({
       evaluationtoken,
       evaluationId,
       responses,
     });
-
-    await completeEvaluation.save();
-
+    await newEvaluation.save();
     evaluationToken.usageCount += 1;
     await evaluationToken.save();
-
+    return newEvaluation;
+  } else if (evaluationToken.usageCount === 1) {
+    completeEvaluation.responses2 = responses;
+    await completeEvaluation.save();
+    evaluationToken.usageCount += 1;
+    await evaluationToken.save();
     return completeEvaluation;
+  } else {
+    throw new Error("Token has been used the maximum number of times allowed");
+  }
   } catch (error) {
     console.error('Error saving complete evaluation:', error);
     throw error;
   }
 };
 
-// **********************************************************************************
-// Función para guardar o actualizar respuestas parciales
-const savePartialResponse = async (
-  evaluationtoken,
-  childId,
-  userId,
-  questionId,
-  optionId,
-  answer
-) => {
-  try {
-    // Buscar si ya existe una respuesta parcial para este usuario y pregunta
-    let response = await EvaluationResponses.findOne({
-      evaluationtoken,
-      childId,
-      userId,
-      questionId,
-    });
-
-    if (response) {
-      // Si la respuesta ya existe, actualizarla
-      response.optionId = optionId;
-      response.answer = answer;
-      response.updatedAt = Date.now();
-
-      await response.save();
-    } else {
-      // Si no existe, crear una nueva respuesta
-      response = new EvaluationResponses({
-        evaluationtoken,
-        childId,
-        userId,
-        questionId,
-        optionId,
-        answer,
-      });
-
-      await response.save();
-    }
-
-    return response;
-  } catch (error) {
-    console.error("Error saving evaluation response:", error);
-    throw error;
-  }
-};
-
-module.exports = { saveCompleteEvaluation, savePartialResponse };
+module.exports = { saveCompleteEvaluation };

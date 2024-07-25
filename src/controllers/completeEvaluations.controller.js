@@ -1,5 +1,5 @@
 const { saveCompleteEvaluation } = require("../services/evaluationService");
-const Evaluation = require("../models/CompleteEvaluation");
+const CompleteEvaluation = require("../models/CompleteEvaluation");
 
 // Crear una nueva CompleteEvaluation
 const createCompleteEvaluation = async (req, res) => {
@@ -7,15 +7,9 @@ const createCompleteEvaluation = async (req, res) => {
     // console.log('POST /completevaluation', req.body);
     const { evaluationtoken, evaluationId, responses } = req.body;
 
-    // Verificar que la evaluation exista
-    // const evaluation = await Evaluation.findById(evaluationId);
-    // if (!evaluation) {
-    //   return res.status(404).json({ message: "Evaluation no encontrada" });
-    // }
-
     const completeEvaluation = await saveCompleteEvaluation(evaluationtoken, evaluationId, responses);
     res.status(201).json(completeEvaluation);
-    console.log(completeEvaluation);
+    // console.log(completeEvaluation);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -24,7 +18,7 @@ const createCompleteEvaluation = async (req, res) => {
 // Obtener todas las CompleteEvaluations
 const getCompleteEvaluations = async (req, res) => {
   try {
-    const completeEvaluations = await Evaluation.find();
+    const completeEvaluations = await CompleteEvaluation.find();
     res.status(200).json(completeEvaluations);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -34,7 +28,7 @@ const getCompleteEvaluations = async (req, res) => {
 // Obtener una CompleteEvaluation por ID
 const getCompleteEvaluationById = async (req, res) => {
   try {
-    const completeEvaluation = await Evaluation.findById(req.params.id);
+    const completeEvaluation = await CompleteEvaluation.findById(req.params.id);
     if (!completeEvaluation) {
       return res
         .status(404)
@@ -52,12 +46,12 @@ const updateCompleteEvaluation = async (req, res) => {
     const { evaluationtoken, evaluationId, responses } = req.body;
 
     // Verificar que el evaluation exista
-    const evaluation = await Evaluation.findById(evaluationId);
+    const evaluation = await CompleteEvaluation.findById(evaluationId);
     if (!evaluation) {
       return res.status(404).json({ message: "Evaluation no encontrado" });
     }
 
-    const completeEvaluation = await Evaluation.findByIdAndUpdate(
+    const completeEvaluation = await CompleteEvaluation.findByIdAndUpdate(
       req.params.id,
       { evaluationtoken, evaluationId, responses },
       { new: true }
@@ -78,7 +72,7 @@ const updateCompleteEvaluation = async (req, res) => {
 // Eliminar una CompleteEvaluation
 const deleteCompleteEvaluation = async (req, res) => {
   try {
-    const completeEvaluation = await Evaluation.findByIdAndDelete(
+    const completeEvaluation = await CompleteEvaluation.findByIdAndDelete(
       req.params.id
     );
     if (!completeEvaluation) {
