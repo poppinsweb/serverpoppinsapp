@@ -24,10 +24,10 @@ const useEvaluationToken = async (token) => {
     }
     if (evaluationToken.usageCount >= 2) {
       throw new Error("Token has been used the maximum number of times allowed.");
-    }
-    // evaluationToken.usageCount += 1;
+    } else {
+    evaluationToken.usageCount += 1;
     await evaluationToken.save();
-    res.status(200).json({ message: "Token usage updated successfully" });
+    res.status(200).json({ message: "Token usage updated successfully" })};
   } catch (error) {
     throw new Error(error.message);
   }

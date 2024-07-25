@@ -22,7 +22,7 @@ const CompleteEvaluationSchema = new Schema(
     createdAt: { type: Date, default: Date.now },
   },
   { collection: "completevaluations" }
-); // Especificar el nombre de la colección
+);
 
 const CompleteEvaluation = mongoose.model(
   "CompleteEvaluation",

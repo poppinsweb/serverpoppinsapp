@@ -8,7 +8,7 @@ const {
   deleteCompleteEvaluation,
 } = require("../controllers/completeEvaluations.controller");
 
-router.post("/completevaluations", createCompleteEvaluation);
+router.post("/completevaluation", createCompleteEvaluation);
 router.put("/completevaluations/:id", updateCompleteEvaluation);
 router.get("/completevaluations", getCompleteEvaluations);
 router.get("/completevaluations/:id", getCompleteEvaluationById);

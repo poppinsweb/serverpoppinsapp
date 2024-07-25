@@ -32,7 +32,7 @@ const saveCompleteEvaluation = async (evaluationtoken, evaluationId, responses) 
 };
 
 // **********************************************************************************
-// Supongamos que tienes una función para guardar o actualizar respuestas parciales
+// Función para guardar o actualizar respuestas parciales
 const savePartialResponse = async (
   evaluationtoken,
   childId,

@@ -1,19 +1,21 @@
 const { saveCompleteEvaluation } = require("../services/evaluationService");
-const Evaluation = require("../models/Evaluation");
+const Evaluation = require("../models/CompleteEvaluation");
 
 // Crear una nueva CompleteEvaluation
 const createCompleteEvaluation = async (req, res) => {
   try {
+    // console.log('POST /completevaluation', req.body);
     const { evaluationtoken, evaluationId, responses } = req.body;
 
     // Verificar que la evaluation exista
-    const evaluation = await Evaluation.findById(evaluationId);
-    if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation no encontrada" });
-    }
+    // const evaluation = await Evaluation.findById(evaluationId);
+    // if (!evaluation) {
+    //   return res.status(404).json({ message: "Evaluation no encontrada" });
+    // }
 
     const completeEvaluation = await saveCompleteEvaluation(evaluationtoken, evaluationId, responses);
     res.status(201).json(completeEvaluation);
+    console.log(completeEvaluation);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
