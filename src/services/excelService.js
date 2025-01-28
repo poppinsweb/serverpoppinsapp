@@ -1,17 +1,26 @@
-// services/excelService.js
-const XLSX = require('xlsx');
+const xlsx = require("xlsx");
 
-const generateExcel = (data, sheetName = 'Sheet1', fileName = 'export.xlsx') => {
-  // Crear libro y hoja
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+/**
+ * Generates an Excel file buffer with multiple sheets.
+ * @param {Array} sheets - Array of sheet definitions [{ sheetName, data }]
+ * @returns {Buffer} - Buffer containing the Excel file
+ */
+const generateExcelWithSheets = (sheets) => {
+  const workbook = xlsx.utils.book_new();
 
-  // Guardar archivo en buffer para evitar escribir en disco
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+  sheets.forEach(({ sheetName, data }) => {
+    if (data.length > 0) {
+      // Convert JSON to a worksheet
+      const worksheet = xlsx.utils.json_to_sheet(data);
 
-  // Retornar buffer y nombre sugerido
-  return { buffer: excelBuffer, fileName };
+      // Append the worksheet to the workbook
+      xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
+    }
+  });
+
+  // Write the workbook to a buffer
+  return xlsx.write(workbook, { type: "buffer", bookType: "xlsx" });
 };
 
-module.exports = { generateExcel };
+module.exports = { generateExcelWithSheets };
+

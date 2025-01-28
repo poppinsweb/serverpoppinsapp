@@ -53,4 +53,14 @@ const saveCompleteEvaluation = async (
   }
 };
 
-module.exports = { saveCompleteEvaluation };
+// Servicio para obtener todas las evaluaciones completas
+const fetchAllCompleteEvaluations = async () => {
+  try {
+    return await CompleteEvaluation.find().lean();
+  } catch (error) {
+    console.error("Error fetching complete evaluations:", error);
+    throw error;
+  }
+};
+
+module.exports = { saveCompleteEvaluation, fetchAllCompleteEvaluations };

@@ -8,6 +8,6 @@ router.post('/childrenres', saveChildResponse);
 router.get('/childrenres', getChildrenResponse);
 router.delete('/delete-child/:id', deleteChild);
 
-router.get('/export', exportChildrenToExcel);
+// router.get('/export', exportChildrenToExcel);
 
 module.exports = router;

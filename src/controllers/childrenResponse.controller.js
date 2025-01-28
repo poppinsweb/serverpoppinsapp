@@ -55,51 +55,51 @@ const deleteChild = async (req, res) => {
   }
 };
 
-const exportChildrenToExcel = async (req, res) => {
-  try {
-    const children = await ChildResponse.find().lean();
+// const exportChildrenToExcel = async (req, res) => {
+//   try {
+//     const children = await ChildResponse.find().lean();
 
-    // Procesar datos para el Excel
-    const dataForExcel = children.map((child) => {
-      // Formatear la fecha de creación (createdAt)
-      const createdDate = new Date(child.createdAt);
-      const formattedDate = createdDate.toISOString().split("T")[0]; // Obtener YYYY-MM-DD
+//     // Procesar datos para el Excel
+//     const dataForExcel = children.map((child) => {
+//       // Formatear la fecha de creación (createdAt)
+//       const createdDate = new Date(child.createdAt);
+//       const formattedDate = createdDate.toISOString().split("T")[0]; // Obtener YYYY-MM-DD
 
-      // Generar pseudónimo: Iniciales (primera letra en mayúsculas) + Fecha de creación
-      const pseudonym = `${child.firstName.charAt(0).toUpperCase()}${child.lastName.charAt(0).toUpperCase()}-${formattedDate}`;
+//       // Generar pseudónimo: Iniciales (primera letra en mayúsculas) + Fecha de creación
+//       const pseudonym = `${child.firstName.charAt(0).toUpperCase()}${child.lastName.charAt(0).toUpperCase()}-${formattedDate}`;
 
-      // Transformar respuestas en formato plano
-      const responseData = child.responses.reduce((acc, response) => {
-        acc[response.category] = response.value; // Crear columnas con categoría como clave
-        return acc;
-      }, {});
+//       // Transformar respuestas en formato plano
+//       const responseData = child.responses.reduce((acc, response) => {
+//         acc[response.category] = response.value; // Crear columnas con categoría como clave
+//         return acc;
+//       }, {});
 
-      // Retornar fila para Excel
-      return {
-        Pseudonym: pseudonym,
-        ...responseData, // Agregar las respuestas dinámicamente
-      };
-    });
+//       // Retornar fila para Excel
+//       return {
+//         Pseudonym: pseudonym,
+//         ...responseData, // Agregar las respuestas dinámicamente
+//       };
+//     });
 
-    // Generar Excel
-    const { buffer, fileName } = generateExcel(dataForExcel, "Children Responses", "responses_data.xlsx");
+//     // Generar Excel
+//     const { buffer, fileName } = generateExcel(dataForExcel, "Children Responses", "responses_data.xlsx");
 
-    // Configurar headers y enviar archivo
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
-    res.send(buffer);
-  } catch (error) {
-    console.error("Error exporting children data to Excel:", error);
-    res.status(500).json({ message: "Error exporting data." });
-  }
-};
+//     // Configurar headers y enviar archivo
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
+//     res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+//     res.send(buffer);
+//   } catch (error) {
+//     console.error("Error exporting children data to Excel:", error);
+//     res.status(500).json({ message: "Error exporting data." });
+//   }
+// };
 
 module.exports = {
   saveChildResponse,
   getChildrenResponse,
   deleteChild,
-  exportChildrenToExcel,
+  // exportChildrenToExcel,
 };
