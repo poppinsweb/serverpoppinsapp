@@ -1,4 +1,4 @@
-// models/ChildrenDataResponse.js
+// CONTIENE EL MODELO DE LOS DATOS DILIGENCIADOS DE UN NIÑO
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 

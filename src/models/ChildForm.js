@@ -1,3 +1,4 @@
+// CONTIENE EL MODELO DE LAS PREGUNTAS DEL FORMULARIO DE LOS DATOS DE LOS NIÑOS
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 

@@ -1,3 +1,4 @@
+// MODELO QUE CONTIENE LAS RESPUESTAS DE CADA NIÑO A LA ENCUESTA
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 

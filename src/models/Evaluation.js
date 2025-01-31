@@ -1,3 +1,4 @@
+// MODELO QUE CONTIENE LAS PREGUNTAS DE LA ENCUESTA
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
