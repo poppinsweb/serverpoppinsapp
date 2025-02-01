@@ -1,10 +1,10 @@
+// CONTROLADOR QUE CONTIENE EL CRUD DE LAS RESPUESTAS DE LA ENCUESTA
 const { saveCompleteEvaluation } = require("../services/evaluationService");
 const CompleteEvaluation = require("../models/CompleteEvaluation");
 
 // Crear una nueva CompleteEvaluation
 const createCompleteEvaluation = async (req, res) => {
   try {
-    // console.log('POST /completevaluation', req.body);
     const { evaluationtoken, evaluationId, responses } = req.body;
 
     const completeEvaluation = await saveCompleteEvaluation(evaluationtoken, evaluationId, responses);

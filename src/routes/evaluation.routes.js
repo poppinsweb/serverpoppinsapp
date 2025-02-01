@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { getEvaluations } = require('../controllers/evaluations.controller');
 const { getIndependence } = require('../controllers/independence.controller');
-const { getAditionals } = require('../controllers/aditionals.controller');
 const { getSkillsGrooming } = require('../controllers/skillsGrooming.controller');
 const { getSkillsFeeding } = require('../controllers/skillsFeeding.controller');
 const { getSkillsDressing } = require('../controllers/skillsDressing.controller');
@@ -12,7 +11,6 @@ const { getHabitsFeeding } = require('../controllers/habitsFeeding.controller');
 
 router.get('/evaluation', getEvaluations);
 router.get('/independence', getIndependence);
-router.get('/aditionals', getAditionals);
 router.get('/skillsgrooming', getSkillsGrooming);
 router.get('/skillsfeeding', getSkillsFeeding);
 router.get('/skillsdressing', getSkillsDressing);

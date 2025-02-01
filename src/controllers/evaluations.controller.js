@@ -1,3 +1,4 @@
+// CONTROLADOR QUE RECUPERA LAS PREGUNTAS DE LA ENCUESTA
 const Evaluations = require("../models/Evaluation");
 
 // Obtiene la encuesta completa desde la db
