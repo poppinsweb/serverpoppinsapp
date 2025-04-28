@@ -48,7 +48,7 @@ app.use('/api', evaluationTokenRouter);
 
 // *******************************************************************
 // URL de conexión a MongoDB Atlas desde variables de entorno
-const dbUri = process.env.MONGO_URI;
+const dbUri = process.env.DB_URI;
 // Conectar a MongoDB Atlas
 mongoose.connect(dbUri, {
 });
