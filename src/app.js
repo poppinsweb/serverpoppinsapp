@@ -59,7 +59,7 @@ db.once('open', () => {
 });
 // Inicia el servidor
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+    console.log(`Server running at https://server-poppinsapp.onrender.com/`);
 });
 app.get('/', (req, res) => {
     res.send('¡Servidor Backend PoppinsApp funcionando correctamente! 🎉');
