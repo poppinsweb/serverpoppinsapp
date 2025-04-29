@@ -12,7 +12,7 @@ const app = express();
 const port = 5000;
 
 const corsOptions = {
-    origin: "https://frontendpoppinsapp.onrender.com/",
+    origin: "https://frontendpoppinsapp.onrender.com",
     credentials: true,
 };
 
@@ -59,7 +59,7 @@ db.once('open', () => {
 });
 // Inicia el servidor
 app.listen(port, () => {
-    console.log(`Server running at https://server-poppinsapp.onrender.com/`);
+    console.log(`Server running at https://server-poppinsapp.onrender.com`);
 });
 app.get('/', (req, res) => {
     res.send('¡Servidor Backend PoppinsApp funcionando correctamente! 🎉');
