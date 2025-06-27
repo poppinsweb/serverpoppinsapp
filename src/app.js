@@ -12,12 +12,12 @@ const app = express();
 const port = 5000;
 
 const corsOptions = {
-    origin: ["https://frontendpoppinsapp.onrender.com", "http://localhost:5173", "https://encuestapoppins.web.app/"],
+    origin: ["http://localhost:5173", "https://encuestapoppins.web.app/"], //"https://frontendpoppinsapp.onrender.com"
     credentials: true,
 };
 
 // Express
-// app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: corsOptions, credentials: true }));
 
 // Middlewares
 app.use(express.json());
