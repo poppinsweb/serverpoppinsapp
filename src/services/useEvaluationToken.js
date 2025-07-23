@@ -1,60 +1,53 @@
-const EvaluationToken = require("../models/EvaluationToken");
-const { v4: uuidv4 } = require("uuid");
+const evaluationTokenService = require("../services/useEvaluationToken");
 
-const createEvaluationToken = async (email, userId) => {
+const createToken = async (req, res) => {
   try {
-    const token = new EvaluationToken({
-      email,
-      userId,
-      evaluationToken: uuidv4(), // Generate a unique token using uuid
+    const { email, userId } = req.body;
+    const token = await evaluationTokenService.createEvaluationToken(email, userId);
+
+    return res.status(201).json({
+      message: "Token created and email sent successfully.",
+      token: token.evaluationToken
     });
-    await token.save();
-    await sendTokenByEmail(email, token);
-    return token;
   } catch (error) {
-    throw new Error("Error creating token: " + error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
 
-const useEvaluationToken = async (token) => {
-  try {
-    const evaluationToken = await EvaluationToken.findOne({ evaluationToken: token });
+const useToken = async (req, res) => {
+  const { token } = req.params;
 
-    if (!evaluationToken) {
-      throw new Error("Token not found.");
-    }
-    if (evaluationToken.usageCount >= 2) {
-      throw new Error("Token has been used the maximum number of times allowed.");
-    } else {
-    evaluationToken.usageCount += 1;
-    await evaluationToken.save();
-    res.status(200).json({ message: "Token usage updated successfully" })};
+  try {
+    const message = await evaluationTokenService.useEvaluationToken(token);
+    return res.status(200).json({ message });
   } catch (error) {
-    throw new Error(error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
 
-const getAllEvaluationTokens = async () => {
+const getAllTokens = async (req, res) => {
   try {
-    const tokens = await EvaluationToken.find({});
-    return tokens;
+    const tokens = await evaluationTokenService.getAllEvaluationTokens();
+    return res.status(200).json({ tokens });
   } catch (error) {
-    throw new Error("Error fetching tokens: " + error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
 
-const deleteEvaluationToken = async (id) => {
+const deleteToken = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    await EvaluationToken.findByIdAndDelete(id);
-    return "Token deleted successfully.";
+    const message = await evaluationTokenService.deleteEvaluationToken(id);
+    return res.status(200).json({ message });
   } catch (error) {
-    throw new Error("Error deleting token: " + error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
 
 module.exports = {
-  createEvaluationToken,
-  useEvaluationToken,
-  getAllEvaluationTokens,
-  deleteEvaluationToken,
+  createToken,
+  useToken,
+  getAllTokens,
+  deleteToken,
 };
