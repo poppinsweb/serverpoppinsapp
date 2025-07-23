@@ -1,4 +1,4 @@
-const sendEmail = require("../services/useEvaluationToken");
+const sendEmail = require("../services/sendEmail");
 
 const createToken = async (req, res) => {
   try {
