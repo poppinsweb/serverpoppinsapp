@@ -1,6 +1,6 @@
 const EvaluationToken = require("../models/EvaluationToken");
 const { v4: uuidv4 } = require("uuid");
-const { sendTokenByEmail } = require("./emailService"); // Asegúrate de la ruta correcta
+const { sendTokenByEmail } = require("../utils/mailer"); // Asegúrate de la ruta correcta
 
 /**
  * Crea un token y envía un correo al usuario.
