@@ -1,5 +1,7 @@
 // utils/mailer.js
 const nodemailer = require('nodemailer');
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? 'Set' : 'Not set');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', // o el proveedor que uses
