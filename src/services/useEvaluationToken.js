@@ -9,6 +9,7 @@ const createEvaluationToken = async (email, userId) => {
       evaluationToken: uuidv4(), // Generate a unique token using uuid
     });
     await token.save();
+    await sendTokenByEmail(email, token);
     return token;
   } catch (error) {
     throw new Error("Error creating token: " + error.message);
