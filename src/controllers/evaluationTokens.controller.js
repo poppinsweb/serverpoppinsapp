@@ -1,5 +1,5 @@
 // const EvaluationToken = require("../models/EvaluationToken");
-const evaluationTokenService = require("../services/useEvaluationToken");
+const evaluationTokenService = require("../services/sendEmail");
 
 const createToken = async (req, res) => {
   try {
