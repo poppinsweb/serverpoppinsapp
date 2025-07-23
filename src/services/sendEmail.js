@@ -1,6 +1,6 @@
 const EvaluationToken = require("../models/EvaluationToken");
 const { v4: uuidv4 } = require("uuid");
-const { sendTokenByEmail } = require("../utils/mailer"); // Asegúrate de la ruta correcta
+const { sendTokenEmail } = require("../utils/mailer"); // Asegúrate de la ruta correcta
 
 /**
  * Crea un token y envía un correo al usuario.
@@ -19,7 +19,9 @@ const createEvaluationToken = async (email, userId) => {
     });
 
     await token.save();
-    await sendTokenByEmail(email, tokenValue); // Enviando correo con token
+    await sendTokenEmail(email, tokenValue); // Enviando correo con token
+
+    console.log(`Token enviado a ${email}: ${tokenValue}`);
 
     return token;
   } catch (error) {
