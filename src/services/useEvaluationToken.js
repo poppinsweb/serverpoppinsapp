@@ -1,9 +1,9 @@
-const evaluationTokenService = require("../services/useEvaluationToken");
+const sendEmail = require("../services/useEvaluationToken");
 
 const createToken = async (req, res) => {
   try {
     const { email, userId } = req.body;
-    const token = await evaluationTokenService.createEvaluationToken(email, userId);
+    const token = await sendEmail.createEvaluationToken(email, userId);
 
     return res.status(201).json({
       message: "Token created and email sent successfully.",
