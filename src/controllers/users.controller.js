@@ -13,20 +13,46 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { email, password, admin } = req.body;
+    const { email, password, password2, admin } = req.body;
+
+    // Validación de campos requeridos
+    if (!email || !password) {
+      return res.status(400).json({ message: "Debe llenar todos los campos" });
+    }
+
+    // Verificar si el email ya existe
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "El email ya está registrado" });
+    }
+
+    // Si el usuario no es admin, verificar password2
+    if (!admin) {
+      if (!password2) {
+        return res.status(400).json({ message: "Ingrese de nuevo su password" });
+      }
+
+      if (password !== password2) {
+        return res.status(400).json({ message: "Las contraseñas no coinciden" });
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 6);
+
     const newUser = new User({
       email,
       password: hashedPassword,
-      // evaluationtoken,
-      admin,
+      admin: !!admin, // Si no se manda, será false
     });
+
     await newUser.save();
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({ message: "Usuario creado" });
+
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error });
+    res.status(500).json({ message: "Error creando el usuario", error });
   }
 };
+
 
 const deleteUser = async(req, res) => {
   try {
