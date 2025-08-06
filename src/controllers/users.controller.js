@@ -13,17 +13,23 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { email, password, password2, admin } = req.body;
+    const { userName, password, password2, token, admin } = req.body;
 
     // Validación de campos requeridos
-    if (!email || !password) {
+    if (!userName || !password || !token) {
       return res.status(400).json({ message: "Debe llenar todos los campos" });
     }
 
-    // Verificar si el email ya existe
-    const existingUser = await User.findOne({ email });
+    // Verificar si el userName ya existe
+    const existingUser = await User.findOne({ userName });
     if (existingUser) {
-      return res.status(400).json({ message: "El email ya está registrado" });
+      return res.status(400).json({ message: "El nombre de usuario ya está registrado" });
+    }
+
+    // Verificar si el token ya existe***
+    const existingToken = await User.findOne({ token });
+    if (existingToken) {
+      return res.status(400).json({ message: "El token ya fue registrado" });
     }
 
     // Si el usuario no es admin, verificar password2
@@ -40,7 +46,7 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 6);
 
     const newUser = new User({
-      email,
+      userName,
       password: hashedPassword,
       admin: !!admin, // Si no se manda, será false
     });
@@ -52,7 +58,6 @@ const createUser = async (req, res) => {
     res.status(500).json({ message: "Error creando el usuario", error });
   }
 };
-
 
 const deleteUser = async(req, res) => {
   try {
@@ -68,24 +73,23 @@ const deleteUser = async(req, res) => {
 }
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { userName, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ userName });
     if (!user) {
-      return res.status(400).json({ message: "Authentication failed" });
+      return res.status(400).json({ message: "No se pudo autenticar el usuario" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Authentication failed" });
+      return res.status(400).json({ message: "No se pudo autenticar el usuario" });
     }
 
     // Almacenamiento de la info del user en la sesión
     req.session.user = {
       id: user._id,
-      email: user.email,
-      // evaluationtoken: user.evaluationtoken,
+      userName: user.userName,
       admin: user.admin,
     };
 
