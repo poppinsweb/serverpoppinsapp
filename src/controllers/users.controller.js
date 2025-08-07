@@ -100,6 +100,7 @@ const loginUser = async (req, res) => {
     req.session.user = {
       id: user._id,
       userName: user.userName,
+      email: user.email,
       admin: user.admin,
     };
 
