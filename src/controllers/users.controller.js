@@ -73,13 +73,23 @@ const deleteUser = async(req, res) => {
 }
 
 const loginUser = async (req, res) => {
-  const { userName, password } = req.body;
+  const { userName, email, password } = req.body;
 
   try {
-    const user = await User.findOne({ userName });
+    let user;
+    // Si se proporciona email, buscar por email, de lo contrario por userName
+    if (userName){
+      user = await User.findOne({ userName });
+    } else if (email) {
+      user = await User.findOne({ email });
+    }
+    
     if (!user) {
       return res.status(400).json({ message: "No se pudo autenticar el usuario" });
     }
+
+    // console.log("backend user:", user);
+    
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
