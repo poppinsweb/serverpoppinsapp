@@ -48,6 +48,7 @@ const createUser = async (req, res) => {
     const newUser = new User({
       userName,
       password: hashedPassword,
+      token,
       admin: !!admin, // Si no se manda, será false
     });
 
