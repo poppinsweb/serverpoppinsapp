@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "El nombre de usuario ya está registrado" });
     }
 
-    // Verificar si el token ya existe***
+    // Verificar si el token ya fue registrado por otro usuario***
     const existingToken = await User.findOne({ token });
     if (existingToken) {
       return res.status(400).json({ message: "El token ya fue registrado" });
