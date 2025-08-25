@@ -1,4 +1,5 @@
 // REQUIERE IMPLEMENTAR JWT
+// @ts-ignore
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
@@ -56,7 +57,7 @@ const createUser = async (req, res) => {
     res.status(201).json({ message: "Usuario creado" });
 
   } catch (error) {
-    res.status(500).json({ message: "Error creando el usuario", error });
+    res.status(500).json({ message: "Error creando el usuario", error: error.message });
   }
 };
 
