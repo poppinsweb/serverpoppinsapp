@@ -35,7 +35,7 @@ const getChildrenResponse = async (req, res) => {
   try {
     const children = await ChildResponse.find();
     res.json(children);
-    console.log("Children data retrieved:", children);
+    // console.log("Children data retrieved:", children);
   } catch (error) {
     console.error("Error retrieving children data:", error);
     res.status(500).json({ message: err.message });
