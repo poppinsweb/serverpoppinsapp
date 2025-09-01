@@ -12,7 +12,7 @@ const app = express();
 const port = 5000;
 
 const corsOptions = {
-    origin: ["http://localhost:5173", "https://encuestapoppins.web.app/"], //"https://frontendpoppinsapp.onrender.com",
+    origin: ["http://localhost:5173"], //"https://encuestapoppins.web.app/", //"https://frontendpoppinsapp.onrender.com",
     credentials: true,
 };
 

@@ -101,7 +101,9 @@ const addTokenToUser = async (req, res) => {
 
 const deleteUser = async(req, res) => {
   try {
-    const delUserId = await User.findOneAndDelete(req.params.id)
+    const { id } = req.params;
+    const delUserId = await User.findOneAndDelete({ _id: id });
+    res.json({ message: "Usuario eliminado" });
     if(!delUserId) {
       return res
       .status(404)
