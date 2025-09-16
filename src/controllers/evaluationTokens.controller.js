@@ -1,35 +1,49 @@
-// const EvaluationToken = require("../models/EvaluationToken");
+const mongoose = require("mongoose");
 const evaluationTokenService = require("../services/sendEmail");
 
+// Crea un token y envía correo. Acepta body plano o envuelto en { data: {...} }
 const createToken = async (req, res) => {
-    const { email, userId, id } = req.body; 
-    if (!email || !userId || !id) {
-      return res.status(400).json({ error: 'Missing required fields: email, userId, or id' });
-    }
-     try {
-    // 🔍 Validar si la encuesta existe con ese ID
-    const evaluation = await Evaluation.findById(id);
-    if (!evaluation) {
-      return res.status(404).json({ error: 'Evaluation not found' });
-    }
+  // Permitir tanto body plano como envuelto en `data`
+  const payload = req.body && req.body.data ? req.body.data : req.body;
 
-    // Crear el token
-    const uuid = require('uuid');
-    const newToken = new EvaluationToken({
-      email,
-      userId,
-      evaluationToken: uuid.v4(),
-    });
+  // Soportar alias y distintas formas
+  const email = payload?.email;
+  const userId = payload?.userId || payload?.userID; // alias
+  // id de evaluación opcional por ahora (no requerido para crear token)
+  const evaluationId = payload?.id || payload?.evaluationId || (Array.isArray(payload?.productId) ? payload.productId[0] : payload?.productId);
 
-    await newToken.save();
+  if (!email || !userId) {
+    return res.status(400).json({ error: "Missing required fields: email and userId/userID" });
+  }
 
-    // Enviar el correo
-    await sendTokenEmail(email, newToken.evaluationToken);
+  // Validar formato de ObjectId para userId
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: "userId must be a valid Mongo ObjectId (24 hex chars)" });
+  }
 
-    res.status(201).json({ token: newToken });
+  try {
+    // Si en el futuro es necesario validar evaluación, se puede reactivar esta sección
+    // if (evaluationId) {
+    //   const Evaluation = require("../models/Evaluation");
+    //   if (!mongoose.Types.ObjectId.isValid(evaluationId)) {
+    //     return res.status(400).json({ error: "evaluation id must be a valid ObjectId" });
+    //   }
+    //   const evaluation = await Evaluation.findById(evaluationId);
+    //   if (!evaluation) {
+    //     return res.status(404).json({ error: "Evaluation not found" });
+    //   }
+    // }
+
+    // Delegar creación y envío de correo al servicio
+    const token = await evaluationTokenService.createEvaluationToken(email, userId);
+    return res.status(201).json({ token });
   } catch (error) {
-    console.error('Error creating token:', error);
-    res.status(500).json({ error: 'Error creating token: ' + error.message });
+    console.error("Error creating token:", error);
+    // Normalizar errores de casteo
+    const message = /Cast to ObjectId failed/i.test(error.message)
+      ? "Invalid userId format (must be a Mongo ObjectId)"
+      : error.message;
+    return res.status(500).json({ error: "Error creating token: " + message });
   }
 };
 
