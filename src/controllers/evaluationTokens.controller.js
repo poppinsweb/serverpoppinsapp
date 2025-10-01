@@ -48,49 +48,48 @@ const createToken = async (req, res) => {
 };
 
 const useToken = async (req, res) => {
-  const { token } = req.params;
-
   try {
-    const message = await evaluationTokenService.useEvaluationToken(token);
-    res.status(200).send({ message });
+    const { token } = req.params;
+    const existing = await EvaluationToken.findOne({ token });
+
+    if (!existing) {
+      return res.status(404).json({ message: "Token no encontrado" });
+    }
+    if (existing.used) {
+      return res.status(400).json({ message: "Token ya fue usado" });
+    }
+
+    existing.used = true;
+    await existing.save();
+
+    res.status(200).json({ message: "Token usado correctamente" });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(500).json({ message: "Error al usar token", error });
   }
 };
 
 const getAllTokens = async (req, res) => {
   try {
-    const tokens = await evaluationTokenService.getAllEvaluationTokens();
-    res.status(200).send({ tokens });
+    const tokens = await EvaluationToken.find();
+    res.status(200).json(tokens);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(500).json({ message: "Error al obtener tokens", error });
   }
 };
 
 const deleteToken = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const message = await evaluationTokenService.deleteEvaluationToken(id);
-    res.status(200).send({ message });
+    const { id } = req.params;
+    await EvaluationToken.findByIdAndDelete(id);
+    res.status(200).json({ message: "Token eliminado" });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(500).json({ message: "Error al eliminar token", error });
   }
 };
-
-// const secondEvaluationToken = async (req, res) => {
-//   const { token } = req.params;
-//   try {
-    
-//   } catch (error) {
-//     res.status(400).send({ error: error.message });
-//   }
-// };
 
 module.exports = {
   createToken,
   useToken,
   getAllTokens,
   deleteToken,
-  // secondEvaluationToken,
 };
