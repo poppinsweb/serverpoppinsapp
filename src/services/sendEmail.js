@@ -1,85 +1,45 @@
+const { sendTokenEmail } = require("../utils/mailer");
 const EvaluationToken = require("../models/EvaluationToken");
-const { v4: uuidv4 } = require("uuid");
-const { sendTokenEmail } = require("../utils/mailer"); // Asegúrate de la ruta correcta
+const crypto = require("crypto");
 
-/**
- * Crea un token y envía un correo al usuario.
- * @param {String} email
- * @param {String} userId
- * @returns {Object} token creado
- */
-const createEvaluationToken = async (email, userId) => {
-  try {
-    const tokenValue = uuidv4();
+async function createEvaluationToken(email, userId) {
+  // Generar token único
+  const token = crypto.randomBytes(16).toString("hex");
 
-    const token = new EvaluationToken({
-      email,
-      userId,
-      evaluationToken: tokenValue,
-    });
+  // Guardar en DB
+  const newToken = new EvaluationToken({
+    evaluationToken: token,
+    userId,
+    email,
+  });
+  await newToken.save();
 
-    await token.save();
-    await sendTokenEmail(email, tokenValue); // Enviando correo con token
+  // Enviar correo
+  const mailResult = await sendTokenEmail(email, token);
 
-    console.log(`Token enviado a ${email}: ${tokenValue}`);
-
-    return token;
-  } catch (error) {
-    throw new Error("Error creating token: " + error.message);
+  if (!mailResult.success) {
+    throw new Error("Error al enviar correo: " + mailResult.error);
   }
-};
 
-/**
- * Usa un token para incrementar su uso hasta un máximo de 2 veces.
- * @param {String} tokenValue
- * @returns {String} mensaje de éxito
- */
-const useEvaluationToken = async (tokenValue) => {
-  try {
-    const evaluationToken = await EvaluationToken.findOne({ evaluationToken: tokenValue });
+  return token;
+}
 
-    if (!evaluationToken) {
-      throw new Error("Token not found.");
-    }
-    if (evaluationToken.usageCount >= 2) {
-      throw new Error("Token has been used the maximum number of times allowed.");
-    }
+async function useEvaluationToken(token) {
+  const existingToken = await EvaluationToken.findOne({ evaluationToken: token });
+  if (!existingToken) throw new Error("Token inválido o no encontrado");
 
-    evaluationToken.usageCount += 1;
-    await evaluationToken.save();
+  await EvaluationToken.deleteOne({ _id: existingToken._id });
+  return "Token válido y eliminado";
+}
 
-    return "Token usage updated successfully";
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
+async function getAllEvaluationTokens() {
+  return EvaluationToken.find();
+}
 
-/**
- * Obtiene todos los tokens guardados en la base de datos.
- * @returns {Array} lista de tokens
- */
-const getAllEvaluationTokens = async () => {
-  try {
-    const tokens = await EvaluationToken.find({});
-    return tokens;
-  } catch (error) {
-    throw new Error("Error fetching tokens: " + error.message);
-  }
-};
-
-/**
- * Elimina un token por su ID.
- * @param {String} id
- * @returns {String} mensaje de éxito
- */
-const deleteEvaluationToken = async (id) => {
-  try {
-    await EvaluationToken.findByIdAndDelete(id);
-    return "Token deleted successfully.";
-  } catch (error) {
-    throw new Error("Error deleting token: " + error.message);
-  }
-};
+async function deleteEvaluationToken(id) {
+  await EvaluationToken.findByIdAndDelete(id);
+  return "Token eliminado";
+}
 
 module.exports = {
   createEvaluationToken,
