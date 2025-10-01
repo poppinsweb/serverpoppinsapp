@@ -55,10 +55,15 @@ const createToken = async (req, res) => {
     console.log(`Token enviado a ${email}: ${token}`);
     res.status(200).json({ message: "Token creado y enviado por correo", token });
   } catch (error) {
-    console.error("Error al enviar el correo:", error);
-    res.status(500).json({ message: "Error al crear token o enviar correo", error });
-  }
-};
+  console.error("Error al crear token o enviar correo:", error);
+
+  res.status(500).json({
+    message: "Error al crear token o enviar correo",
+    error: error.message || error.toString(),
+    stack: error.stack, // opcional, solo para debug
+  });
+}
+
 
 const useToken = async (req, res) => {
   try {
