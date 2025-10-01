@@ -1,36 +1,32 @@
 const { v4: uuidv4 } = require("uuid");
 const nodemailer = require("nodemailer");
-const EvaluationToken = require("../models/evaluationToken.model"); // tu modelo de tokens
+const EvaluationToken = require("../models/evaluationToken.model");
 
 // Configuración del transporte de correo
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // tu correo Gmail
-    pass: process.env.EMAIL_PASS, // App Password generada en Google
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS, // App Password de Google
   },
 });
 
-/**
- * Crear un nuevo token y enviarlo por correo
- */
+// Crear un nuevo token y enviarlo por correo
 const createToken = async (req, res) => {
   try {
-    console.log("DB_URI:", process.env.DB_URI); 
+    console.log("DB_URI:", process.env.DB_URI);
     const { email, userId, productId } = req.body.data;
 
     if (!email || !userId) {
       return res.status(400).json({ message: "Email y userId son requeridos" });
     }
 
-    // Crear token único
     const token = uuidv4();
 
-    // Guardar token en DB
     const newToken = new EvaluationToken({
       token,
       email,
-      userID,
+      userId, // ✅ corregido
       productId,
       createdAt: new Date(),
       used: false,
@@ -38,7 +34,6 @@ const createToken = async (req, res) => {
 
     await newToken.save();
 
-    // Enviar correo
     const mailOptions = {
       from: `"PoppinsApp" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -55,15 +50,13 @@ const createToken = async (req, res) => {
     console.log(`Token enviado a ${email}: ${token}`);
     res.status(200).json({ message: "Token creado y enviado por correo", token });
   } catch (error) {
-  console.error("Error al crear token o enviar correo:", error);
-
-  res.status(500).json({
-    message: "Error al crear token o enviar correo",
-    error: error.message || error.toString(),
-    stack: error.stack, // opcional, solo para debug
-  });
-}
-
+    console.error("Error al crear token o enviar correo:", error);
+    res.status(500).json({
+      message: "Error al crear token o enviar correo",
+      error: error.message || error.toString(),
+    });
+  }
+};
 
 const useToken = async (req, res) => {
   try {
@@ -110,4 +103,4 @@ module.exports = {
   useToken,
   getAllTokens,
   deleteToken,
-};}
+};
