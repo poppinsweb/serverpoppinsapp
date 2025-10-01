@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
  */
 const createToken = async (req, res) => {
   try {
+    console.log("DB_URI:", process.env.DB_URI); 
     const { email, userID, productId } = req.body.data;
 
     if (!email || !userID) {
