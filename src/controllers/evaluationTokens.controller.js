@@ -24,13 +24,14 @@ const createToken = async (req, res) => {
     const token = uuidv4();
 
     const newToken = new EvaluationToken({
-      token,
-      email,
-      userId, // ✅ corregido
-      productId,
-      createdAt: new Date(),
-      used: false,
-    });
+    evaluationToken: token, // ✅ ahora sí coincide con el schema
+    email,
+    userId,
+    productId,
+    createdAt: new Date(),
+    used: false,
+});
+
 
     await newToken.save();
 
