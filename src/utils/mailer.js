@@ -13,7 +13,7 @@ async function sendTokenEmail(to, token) {
       <p>Gracias por tu compra. Aquí está tu token de acceso:</p>
       <p><b>${token}</b></p>
       <p>Puedes acceder a la encuesta aquí: 
-        <a href="https://encuestapoppins.web.app">Ir a la encuesta</a>
+        <a href="https://encuestapoppins.web.app/">Ir a la encuesta</a>
       </p>
     `,
   };
