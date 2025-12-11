@@ -1,58 +1,34 @@
 const mongoose = require("mongoose");
-const evaluationTokenService = require("../services/sendEmail");
-// const EvaluationToken = require("../models/EvaluationToken"); // Solo si lo necesitas
+const evaluationTokenService = require("../services/EvaluationTokenService");
 
 // ✅ Crear token y enviar correo
 const createToken = async (req, res) => {
   try {
-    // Permitir tanto body plano como envuelto en { data: {...} }
-    const payload = req.body && req.body.data ? req.body.data : req.body;
-
-    const email = payload?.email;
-    const userId = payload?.userId || payload?.userID;
-    const evaluationId =
-      payload?.id ||
-      payload?.evaluationId ||
-      (Array.isArray(payload?.productId)
-        ? payload.productId[0]
-        : payload?.productId);
+    const payload = req.body?.data || req.body;
+    const { email, userId, evaluationId } = payload;
 
     if (!email || !userId) {
-      return res
-        .status(400)
-        .json({ error: "Missing required fields: email and userId/userID" });
+      return res.status(400).json({ error: "Missing required fields: email and userId" });
     }
 
-    // Validar que userId sea un ObjectId válido
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res
-        .status(400)
-        .json({ error: "userId must be a valid Mongo ObjectId (24 hex chars)" });
+      return res.status(400).json({ error: "Invalid userId format" });
     }
 
-    // Llamar al servicio encargado de crear y enviar el token
-    const token = await evaluationTokenService.createEvaluationToken(
-      email,
-      userId,
-      evaluationId
-    );
-
+    const token = await evaluationTokenService.createEvaluationToken(email, userId, evaluationId);
     res.status(201).json({ token });
   } catch (error) {
     console.error("Error creating token:", error);
-    const message = /Cast to ObjectId failed/i.test(error.message)
-      ? "Invalid userId format (must be a Mongo ObjectId)"
-      : error.message;
-    res.status(500).json({ error: "Error creating token: " + message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 // ✅ Usar token
 const useToken = async (req, res) => {
-  const { token } = req.params;
   try {
-    const message = await evaluationTokenService.useEvaluationToken(token);
-    res.status(200).json({ message });
+    const { token } = req.params;
+    const result = await evaluationTokenService.useEvaluationToken(token);
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error using token:", error);
     res.status(400).json({ error: error.message });
@@ -72,19 +48,14 @@ const getAllTokens = async (req, res) => {
 
 // ✅ Eliminar token
 const deleteToken = async (req, res) => {
-  const { id } = req.params;
   try {
-    const message = await evaluationTokenService.deleteEvaluationToken(id);
-    res.status(200).json({ message });
+    const { id } = req.params;
+    const result = await evaluationTokenService.deleteEvaluationToken(id);
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error deleting token:", error);
     res.status(400).json({ error: error.message });
   }
 };
 
-module.exports = {
-  createToken,
-  useToken,
-  getAllTokens,
-  deleteToken,
-};
+module.exports = { createToken, useToken, getAllTokens, deleteToken };

@@ -33,14 +33,19 @@ const saveCompleteEvaluation = async (
         responses,
       });
       await newEvaluation.save();
+
       evaluationToken.usageCount += 1;
       await evaluationToken.save();
+
       return newEvaluation;
     } else if (evaluationToken.usageCount === 1) {
       completeEvaluation.responses2 = responses;
       await completeEvaluation.save();
+
       evaluationToken.usageCount += 1;
+      evaluationToken.isUsed = true;
       await evaluationToken.save();
+      
       return completeEvaluation;
     } else {
       throw new Error(
