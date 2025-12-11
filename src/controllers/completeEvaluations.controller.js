@@ -1,25 +1,33 @@
 // CONTROLADOR QUE CONTIENE EL CRUD DE LAS RESPUESTAS DE LA ENCUESTA
-const { saveCompleteEvaluation } = require("../services/evaluationService");
+const { saveCompleteEvaluation, fetchAllCompleteEvaluations } = require("../services/evaluationService");
 const CompleteEvaluation = require("../models/CompleteEvaluation");
 
-// Crear una nueva CompleteEvaluation
+// Crear una nueva CompleteEvaluation (primera o segunda aplicación)
 const createCompleteEvaluation = async (req, res) => {
   try {
     const { evaluationtoken, evaluationId, responses } = req.body;
 
-    const completeEvaluation = await saveCompleteEvaluation(evaluationtoken, evaluationId, responses);
-    res.status(201).json(completeEvaluation);
-    // console.log(completeEvaluation);
+    const result = await saveCompleteEvaluation(evaluationtoken, evaluationId, responses);
+
+    res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 };
 
-// Obtener todas las CompleteEvaluations
+// Obtener todas las CompleteEvaluations con estado
 const getCompleteEvaluations = async (req, res) => {
   try {
-    const completeEvaluations = await CompleteEvaluation.find();
-    res.status(200).json(completeEvaluations);
+    const completeEvaluations = await fetchAllCompleteEvaluations();
+
+    // enriquecer con estado
+    const enriched = completeEvaluations.map(ev => ({
+      ...ev,
+      completed: !!ev.secondAppliedAt, // ya diligenció ambas
+      partiallyCompleted: !!ev.firstAppliedAt && !ev.secondAppliedAt, // solo primera
+    }));
+
+    res.status(200).json(enriched);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -30,37 +38,36 @@ const getCompleteEvaluationById = async (req, res) => {
   try {
     const completeEvaluation = await CompleteEvaluation.findById(req.params.id);
     if (!completeEvaluation) {
-      return res
-        .status(404)
-        .json({ message: "CompleteEvaluation no encontrada" });
+      return res.status(404).json({ message: "CompleteEvaluation no encontrada" });
     }
-    res.status(200).json(completeEvaluation);
+
+    res.status(200).json({
+      ...completeEvaluation.toObject(),
+      completed: !!completeEvaluation.secondAppliedAt,
+      partiallyCompleted: !!completeEvaluation.firstAppliedAt && !completeEvaluation.secondAppliedAt,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Actualizar una CompleteEvaluation
+// Actualizar una CompleteEvaluation (ej. corregir respuestas)
 const updateCompleteEvaluation = async (req, res) => {
   try {
-    const { evaluationtoken, evaluationId, responses } = req.body;
+    const { responses, responses2 } = req.body;
 
-    // Verificar que el evaluation exista
-    const evaluation = await CompleteEvaluation.findById(evaluationId);
-    if (!evaluation) {
-      return res.status(404).json({ message: "Evaluation no encontrado" });
-    }
+    const updateFields = {};
+    if (responses) updateFields.responses = responses;
+    if (responses2) updateFields.responses2 = responses2;
 
     const completeEvaluation = await CompleteEvaluation.findByIdAndUpdate(
       req.params.id,
-      { evaluationtoken, evaluationId, responses },
+      updateFields,
       { new: true }
     );
 
     if (!completeEvaluation) {
-      return res
-        .status(404)
-        .json({ message: "CompleteEvaluation no encontrada" });
+      return res.status(404).json({ message: "CompleteEvaluation no encontrada" });
     }
 
     res.status(200).json(completeEvaluation);
@@ -72,13 +79,9 @@ const updateCompleteEvaluation = async (req, res) => {
 // Eliminar una CompleteEvaluation
 const deleteCompleteEvaluation = async (req, res) => {
   try {
-    const completeEvaluation = await CompleteEvaluation.findByIdAndDelete(
-      req.params.id
-    );
+    const completeEvaluation = await CompleteEvaluation.findByIdAndDelete(req.params.id);
     if (!completeEvaluation) {
-      return res
-        .status(404)
-        .json({ message: "CompleteEvaluation no encontrada" });
+      return res.status(404).json({ message: "CompleteEvaluation no encontrada" });
     }
     res.status(200).json({ message: "CompleteEvaluation eliminada" });
   } catch (err) {

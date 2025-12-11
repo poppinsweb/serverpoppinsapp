@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const evaluationTokenService = require("../services/EvaluationTokenService");
 
-// ✅ Crear token y enviar correo
+// ✅ Crear token
 const createToken = async (req, res) => {
   try {
     const payload = req.body?.data || req.body;
@@ -58,4 +58,16 @@ const deleteToken = async (req, res) => {
   }
 };
 
-module.exports = { createToken, useToken, getAllTokens, deleteToken };
+// ✅ Exportar controladores
+const getTokensWithEvaluations = async (req, res) => {
+  try {
+    const tokens = await evaluationTokenService.getTokensWithEvaluations();
+    res.status(200).json({ tokens });
+  } catch (error) {
+    console.error("Error fetching tokens with evaluations:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+module.exports = { createToken, useToken, getAllTokens, deleteToken, getTokensWithEvaluations };

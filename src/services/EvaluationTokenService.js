@@ -76,9 +76,33 @@ async function deleteEvaluationToken(id) {
   return { message: "Token deleted" };
 }
 
+async function getTokensWithEvaluations() {
+  const tokens = await EvaluationToken.find().lean();
+
+  const result = [];
+  for (const token of tokens) {
+    const evaluation = await CompleteEvaluation.findOne({
+      evaluationtoken: token.evaluationToken,
+    }).lean();
+
+    result.push({
+      ...token,
+      firstAppliedAt: evaluation?.firstAppliedAt || null,
+      secondAppliedAt: evaluation?.secondAppliedAt || null,
+      completed: token.usageCount >= 2, // 👈 ya diligenció ambas encuestas
+      partiallyCompleted: token.usageCount === 1, // 👈 solo primera encuesta
+    });
+  }
+
+  return result;
+}
+
+
+
 module.exports = {
   createEvaluationToken,
   useEvaluationToken,
   getAllEvaluationTokens,
   deleteEvaluationToken,
+  getTokensWithEvaluations
 };
