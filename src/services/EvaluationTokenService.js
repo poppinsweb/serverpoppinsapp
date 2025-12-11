@@ -1,6 +1,6 @@
 const EvaluationToken = require("../models/EvaluationToken");
 const CompleteEvaluation = require("../models/CompleteEvaluation");
-const emailService = require("./emailService"); 
+const emailService = require("./emailService");
 const crypto = require("crypto");
 
 // Crear token y enviar correo
@@ -11,12 +11,17 @@ async function createEvaluationToken(email, userId, evaluationId) {
     evaluationToken: tokenString,
     userId,
     email,
-    usageCount: 0,
-    isUsed: false,
+    usageCount: 0
   });
 
   await newToken.save();
-  await emailService.sendTokenEmail(email, tokenString); // 👈 delegar envío
+
+  // Si falla el correo, el token igual queda creado
+  try {
+    await emailService.sendTokenEmail(email, tokenString);
+  } catch (err) {
+    console.error("Error sending email:", err.message);
+  }
 
   return newToken;
 }
@@ -27,7 +32,10 @@ async function useEvaluationToken(tokenString, evaluationId, responses) {
   if (!token) throw new Error("Token not found");
   if (token.usageCount >= 2) throw new Error("Token already used twice");
 
-  let evaluation = await CompleteEvaluation.findOne({ evaluationtoken: tokenString, evaluationId });
+  let evaluation = await CompleteEvaluation.findOne({
+    evaluationtoken: tokenString,
+    evaluationId
+  });
 
   if (!evaluation) {
     // Primera aplicación
@@ -35,7 +43,7 @@ async function useEvaluationToken(tokenString, evaluationId, responses) {
       evaluationtoken: tokenString,
       evaluationId,
       responses,
-      firstAppliedAt: new Date(),
+      firstAppliedAt: new Date()
     });
     await evaluation.save();
   } else if (token.usageCount === 1) {
@@ -48,7 +56,9 @@ async function useEvaluationToken(tokenString, evaluationId, responses) {
       (now.getMonth() - firstDate.getMonth());
 
     if (diffMonths < 1 || diffMonths > 7) {
-      throw new Error("Second evaluation must be between 1 and 7 months after the first.");
+      throw new Error(
+        "Second evaluation must be between 1 and 7 months after the first."
+      );
     }
 
     evaluation.responses2 = responses;
@@ -56,18 +66,23 @@ async function useEvaluationToken(tokenString, evaluationId, responses) {
     await evaluation.save();
   }
 
-  // 👇 factorizar actualización de token
+  // ✅ Actualizar solo usageCount (isUsed ya no existe)
   token.usageCount += 1;
-  token.isUsed = true;
   await token.save();
 
-  return { message: token.usageCount === 1 ? "First evaluation saved" : "Second evaluation saved", evaluation };
+  return {
+    message:
+      token.usageCount === 1
+        ? "First evaluation saved"
+        : "Second evaluation saved",
+    evaluation
+  };
 }
 
 // Obtener todos los tokens
 async function getAllEvaluationTokens() {
   const tokens = await EvaluationToken.find().lean();
-  return tokens; // 👈 ya tienen isUsed en DB, no recalcular
+  return tokens;
 }
 
 // Eliminar token
@@ -76,9 +91,31 @@ async function deleteEvaluationToken(id) {
   return { message: "Token deleted" };
 }
 
+async function getTokensWithEvaluations() {
+  const tokens = await EvaluationToken.find().lean();
+
+  const result = [];
+  for (const token of tokens) {
+    const evaluation = await CompleteEvaluation.findOne({
+      evaluationtoken: token.evaluationToken
+    }).lean();
+
+    result.push({
+      ...token,
+      firstAppliedAt: evaluation?.firstAppliedAt || null,
+      secondAppliedAt: evaluation?.secondAppliedAt || null,
+      completed: token.usageCount >= 2,
+      partiallyCompleted: token.usageCount === 1
+    });
+  }
+
+  return result;
+}
+
 module.exports = {
   createEvaluationToken,
   useEvaluationToken,
   getAllEvaluationTokens,
   deleteEvaluationToken,
+  getTokensWithEvaluations
 };

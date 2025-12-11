@@ -8,7 +8,6 @@ const EvaluationTokenSchema = new Schema({
   userId: { type: ObjectId, ref: "User", required: true },
   evaluationToken: { type: String, unique: true },
   usageCount: { type: Number, default: 0 },
-  isUsed: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

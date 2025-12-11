@@ -14,17 +14,35 @@ const ResponseSchema = new Schema({
 const CompleteEvaluationSchema = new Schema(
   {
     evaluationtoken: { type: String, required: true },
+
     evaluationId: {
       type: Schema.Types.ObjectId,
       ref: "Evaluation",
       required: true,
     },
+
+    // Primera aplicación
     responses: { type: [ResponseSchema], required: true },
-    responses2: { type: [ResponseSchema] }, // Nuevo campo para las segundas respuestas
+    firstAppliedAt: { type: Date }, // 👈 fecha de primera aplicación
+
+    // Segunda aplicación
+    responses2: { type: [ResponseSchema] },
+    secondAppliedAt: { type: Date }, // 👈 fecha de segunda aplicación
+
+    // Metadata
     createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
   },
-  { collection: "completevaluations" }
+  {
+    collection: "completevaluations",
+  }
 );
+
+// Middleware para actualizar updatedAt automáticamente
+CompleteEvaluationSchema.pre("save", function (next) {
+  this.updatedAt = new Date();
+  next();
+});
 
 const CompleteEvaluation = mongoose.model(
   "CompleteEvaluation",
